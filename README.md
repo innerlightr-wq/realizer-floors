@@ -1,7 +1,9 @@
 # Exact Realizer Floors for One- and Two-Defect Valuation Words
 
 Code and data for the technical note *Exact Realizer Floors for One- and
-Two-Defect Valuation Words in the Accelerated 3x+1 Map* (E. De Jesús, 2026).
+Two-Defect Valuation Words in the Accelerated 3x+1 Map* (E. De Jesús, 2026),
+including **Appendix A**, which proves sharp residual extremizers under
+every-prefix confinement and derives one finite non-descent certificate.
 
 **The paper proves nothing about the Collatz conjecture** and excludes no
 divergent orbits. Every statement concerns least realizers of finite valuation
@@ -18,7 +20,9 @@ Python **3.14** (3.10+ should work), **standard library only** — no `numpy`,
 ```sh
 git clone https://github.com/innerlightr-wq/realizer-floors
 cd realizer-floors
-python3 src/verify_note_numbers.py       # regenerates every number in the paper
+python3 src/verify_note_numbers.py                    # main text
+python3 src_indep/VERIFY_CONSTRAINED_EXTREMIZER.py    # Appendix A
+python3 src_indep/VERIFY_NON_DESCENT.py               # Appendix A
 ```
 
 All arithmetic is exact `int`. The only floating point is `math.log2` applied to
@@ -47,7 +51,9 @@ A valuation word is `w = (v₁,…,v_n)`, `S = Σvₖ`, `|w| = n`, `α = log₂3
 | §6 | `β* = 1/2` exact; advance threshold `α/2` | `src_indep/test_R4_R5.py` |
 | §7 | merge/deletion witnesses | `src_indep/test_R5_canonical.py` |
 | §3 | two-run import cross-check (257/528) | `src/two_run_crosscheck.py` |
-| all | single authoritative regeneration | `src/verify_note_numbers.py` → `data/note_numbers.txt` |
+| all (main text) | single authoritative regeneration | `src/verify_note_numbers.py` → `data/note_numbers.txt` |
+| **App. A.1–A.3, A.5** | **sharp constrained residual extremizers** | `src_indep/VERIFY_CONSTRAINED_EXTREMIZER.py` (15/15) |
+| **App. A.7 + certificate** | **non-descent threshold, exclusion example** | `src_indep/VERIFY_NON_DESCENT.py` (18/18) |
 
 `src_indep/` is an **independent second implementation**: it builds the realizer
 class by backward recursion on the word rather than through the affine identity,
