@@ -481,18 +481,31 @@ text was not consulted.
 
 \paragraph{Parity vectors.}
 For the shortcut map, the bijection between parity vectors of length $k$ and
-residue classes modulo $2^{k}$ is due to Terras~\cite{terras1976} (1976), with
-the terminology and much of the later framework from
-Lagarias~\cite{lagarias1985}. Parity vectors for the accelerated map are
-treated by Rozier and Terracol~\cite{rozierterracol}. \emph{Abstract-level
-only.}
+residue classes modulo $2^{k}$ is due to Terras~\cite{terras1976} (1976) and
+independently Everett~\cite{everett1977} (1977); Lagarias's survey
+\cite{lagarias2010} credits both and points to \cite[Theorem~B]{lagarias1985}
+for the precise statement, in the form of the finitely additive invariant
+measure assigning mass $2^{-n}$ to each arithmetic progression modulo $2^{n}$.
+\emph{Verified through the survey, whose full text was consulted; the 1976,
+1977 and 1985 originals were not.}
+
+Rozier and Terracol~\cite{rozierterracol} treat parity vectors for the map
+$n\mapsto(3n+1)/2$ on odd $n$, with $V_j(n)\in\{0,1\}^{j}$, introducing a
+partial order on parity vectors and studying paradoxical sequences.
+\emph{Full text consulted (v5, 17 May 2026).} That is a different object from
+the present setting: their parity vectors are binary words of length $j$ with
+modulus $2^{j}$, whereas a valuation word here records the full exponents
+$v_2(3x+1)$ and carries modulus $2^{S+1}$. They do not treat least elements of
+such classes.
 
 \paragraph{The leading-run spine.}
 That a leading run of $u$ ones forces $2^{u+1}\mid m+1$, giving
 $m(1^{u})=2^{u+1}-1$, is the ``modular resistance spine'' of
 Kayadibi~\cite{kayadibi2026}, who shows $n=2^{m}q-1$ implies
 $T^{j}(n)=3^{j}2^{\,m-j}q-1$ for $0\le j\le m-1$ and hence a deterministic
-lower bound on first-descent time. \emph{Verified at source (abstract).}
+lower bound on first-descent time (Definition~3.1, Lemma~3.3,
+Propositions~3.4 and~3.8). \emph{Full text consulted.} That paper does not
+treat least realizers or the modulus $2^{S+1}$.
 
 \paragraph{Extremal $C_w$ bounds.}
 Sharp bounds on $C_w$---relevant to the anchor sizes here, though not to
@@ -504,8 +517,12 @@ first-hand.}
 No prior treatment was found of: the closed-episode/finite-word distinction of
 Proposition~\ref{prop:tworun} and its consequence Theorem~\ref{thm:fc}\,(c);
 the exact two-defect closed form (Theorem~\ref{thm:r1}); or the
-$\beta$-reduction of \S\ref{sec:beta}. This is a negative search result, not a
-novelty claim.
+$\beta$-reduction of \S\ref{sec:beta}. In particular Lagarias's survey
+\cite{lagarias2010}, which covers the parity-vector framework and its
+literature, contains no treatment of \emph{least} elements of parity-vector
+classes. This is a negative search result, not a novelty claim, and the audit
+remains non-exhaustive: of the works cited here only
+Akhtar~\cite{akhtar2026} rests on its abstract alone.
 
 \section{Limitations}\label{sec:limits}
 
@@ -581,8 +598,10 @@ Two further items are recorded as limitations rather than results. First, the
 prior-art check of \S\ref{sec:lit} is not exhaustive: in particular
 Proposition~\ref{prop:class} is stated in~\cite{akhtar2026}, whose abstract was
 verified at source but whose full text was not consulted, so the boundary
-between that work and \S5--\S6 is established only at abstract level. Second,
-three of the references are cited at abstract level only, as marked.
+between that work and \S5--\S6 is established only at abstract level. Second, of
+the works cited, only~\cite{akhtar2026} rests on its abstract alone; three
+others are cited through Lagarias's survey rather than their originals, as
+marked.
 
 \section*{Provenance}
 
@@ -627,6 +646,11 @@ E. De~Jes\'us, \emph{The Least-Realizer Minimum for Confined Words: An Erratum
 to the Terras--Everett Residue Class\dots}, 11 August 2026,
 \texttt{doi:10.5281/zenodo.21889704}. \emph{Verified at source.}
 
+\bibitem{everett1977}
+C.~J. Everett, \emph{Iteration of the number theoretic function
+$f(2n)=n$, $f(2n+1)=3n+2$}, Advances in Math. \textbf{25} (1977), 42--45.
+\emph{Cited via \cite{lagarias2010}; original not consulted.}
+
 \bibitem{hh1997}
 L.~Halbeisen and N.~Hungerb\"uhler, \emph{Optimal bounds for the length of
 rational Collatz cycles}, Acta Arith. \textbf{78} (1997), no.~3, 227--239.
@@ -635,11 +659,17 @@ rational Collatz cycles}, Acta Arith. \textbf{78} (1997), no.~3, 227--239.
 \bibitem{kayadibi2026}
 S.~Y. Kayadibi, \emph{A Modular Classification of Pre-Descent Resistance in
 Accelerated Odd Collatz Dynamics}, 18 June 2026,
-\texttt{doi:10.5281/zenodo.20745800}. \emph{Abstract verified at source.}
+\texttt{doi:10.5281/zenodo.20745800}. \emph{Full text consulted.}
 
 \bibitem{lagarias1985}
 J.~C. Lagarias, \emph{The $3x+1$ problem and its generalizations}, Amer. Math.
-Monthly \textbf{92} (1985), 3--23. \emph{Not re-verified at source.}
+Monthly \textbf{92} (1985), 3--23. \emph{Theorem~B cited via
+\cite{lagarias2010}; original not consulted.}
+
+\bibitem{lagarias2010}
+J.~C. Lagarias, \emph{The $3x+1$ problem: an overview}, in: The Ultimate
+Challenge: The $3x+1$ Problem, Amer. Math. Soc., 2010, pp.~3--29;
+arXiv:2111.02635. \emph{Full text consulted.}
 
 \bibitem{lagarias1990}
 J.~C. Lagarias, \emph{The set of rational cycles for the $3x+1$ problem},
@@ -647,12 +677,13 @@ Acta Arith. \textbf{56} (1990), 33--53. \emph{Not re-verified at source.}
 
 \bibitem{rozierterracol}
 O.~Rozier and C.~Terracol, \emph{Paradoxical behavior in Collatz sequences},
-arXiv:2502.00948; Discrete Math. \textbf{349} (2026).
-\emph{Abstract-level only.}
+arXiv:2502.00948v5 (17 May 2026); Discrete Math. \textbf{349} (2026).
+\emph{Full text consulted.}
 
 \bibitem{terras1976}
 R.~Terras, \emph{A stopping time problem on the positive integers}, Acta Arith.
-\textbf{30} (1976), 241--252. \emph{Abstract-level only.}
+\textbf{30} (1976), 241--252. \emph{Cited via \cite{lagarias2010};
+original not consulted.}
 \end{thebibliography}
 
 \section*{Acknowledgement of AI assistance}

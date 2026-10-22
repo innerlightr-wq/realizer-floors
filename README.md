@@ -80,9 +80,19 @@ erratum to the Terras–Everett residue class
 ([10.5281/zenodo.21889704](https://doi.org/10.5281/zenodo.21889704), 11 Aug
 2026), and appears independently in Akhtar
 ([10.5281/zenodo.22015248](https://doi.org/10.5281/zenodo.22015248), 19 Aug
-2026). The affine identity is Böhm–Sontacchi (1978), Prop. 4. §9 of the paper
-gives the full audit with verification status on each citation. The prior-art
-check is **not exhaustive**, and absence from it is not evidence of novelty.
+2026). The affine identity is Böhm–Sontacchi (1978), Prop. 4.
+
+§9 of the paper gives the full audit with a verification status on every
+citation. Full texts were consulted for Rozier–Terracol (arXiv:2502.00948v5),
+Kayadibi (Zenodo 20745800) and Lagarias's survey *The 3x+1 Problem: An
+Overview* (arXiv:2111.02635); Terras (1976), Everett (1977) and Lagarias (1985)
+are cited **through that survey** rather than their originals; Akhtar is the
+only citation resting on its abstract alone.
+
+The prior-art check is **not exhaustive**, and absence from it is not evidence
+of novelty. It is worth recording one negative result: Lagarias's survey, which
+covers the parity-vector framework and its literature, contains no treatment of
+*least* elements of parity-vector classes.
 
 ## Licence
 
