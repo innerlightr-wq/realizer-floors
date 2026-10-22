@@ -10,7 +10,9 @@ divergent orbits. Every statement concerns least realizers of finite valuation
 words. There is no formal verification: "verified" means exhaustive or exact
 finite computation on a stated grid.
 
-The paper is in [`paper/`](paper/). Prose companion: [`consolidated.md`](consolidated.md).
+The paper is in [`paper/`](paper/) and published on Zenodo:
+[`10.5281/zenodo.23579193`](https://doi.org/10.5281/zenodo.23579193)
+(CC BY 4.0). Prose companion: [`consolidated.md`](consolidated.md).
 
 ## Setup
 
@@ -114,4 +116,25 @@ Paper and prose (`paper/`, `consolidated.md`, `audit/BRIDGE_AUDIT.md`):
 
 ## Citing
 
-Cite the Zenodo deposit of the note. A DOI will be added here once deposited.
+The note is published on Zenodo under CC BY 4.0:
+
+> De Jesús, Elias (2026). *Exact Realizer Floors for One- and Two-Defect
+> Valuation Words in the Accelerated 3x + 1 Map.* Zenodo.
+> <https://doi.org/10.5281/zenodo.23579193>
+
+```bibtex
+@misc{dejesus2026realizerfloors,
+  author    = {De Jes{\'u}s, Elias},
+  title     = {Exact Realizer Floors for One- and Two-Defect Valuation Words
+               in the Accelerated $3x+1$ Map},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.23579193},
+  url       = {https://doi.org/10.5281/zenodo.23579193}
+}
+```
+
+That is the **version** DOI, pinned to the deposited PDF (v2, 22 October 2026,
+13 pages, including Appendix A). Zenodo also mints a concept DOI resolving to
+the latest version; it is not recorded here because it was not shown on the
+record page.
