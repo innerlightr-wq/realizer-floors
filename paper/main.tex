@@ -472,12 +472,25 @@ Terras--Everett residue class, and is carried as Proposition~5.2 of
 \cite{dejesus-eoc}. Proposition~\ref{prop:class} restates it here, with a proof,
 only because the $2^{S}$ versus $2^{S+1}$ distinction drives
 \S\ref{sec:tworun}; no new priority is claimed for it in this note.
-The same statement appears independently in Akhtar~\cite{akhtar2026}
-(19 August 2026): ``Every finite valuation word is tied to one odd residue class
-modulo $2^{K+1}$, yielding exact arithmetic realizability.'' \emph{Both dates
-verified at source.} That abstract does not address least elements, closed-form
-least realizers, or lower bounds on them, which is where \S5--\S6 sit; its full
-text was not consulted.
+The same statement appears independently in
+Akhtar~\cite{akhtar2026} (19 August 2026) as Theorem~9, with the explicit class
+\[
+r(k)\;\equiv\;-\sum_{j=0}^{m}2^{K_j}3^{-(j+1)}\pmod{2^{K+1}},
+\qquad K_j=\textstyle\sum_{i<j}k_i ,
+\]
+derived from the parity-vector bijection. \emph{Full text consulted.} That
+expression and the form used here, $3^{-n}(2^{S}-C_w)\bmod 2^{S+1}$, are
+equivalent: they differ by $2^{K+2}\cdot(\text{odd})\equiv0$, verified on $1944$
+two-defect words with $0$ disagreements.
+
+Akhtar's concerns are otherwise disjoint from \S5--\S6. He uses the least
+nonnegative representative only in normalized form, $r/M$ with $M=2^{K+1}$, as a
+placement diagnostic (his Table~4); he does not bound least realizers from
+below, give closed forms for them on structured word families, or use
+prefix-truncation and orbit-advance as floors. His ``prefix'' quantities are
+prefix sums $K_i$ and worst-prefix excursions, not truncations of the word to a
+shorter one. The closed-episode condition of
+Proposition~\ref{prop:tworun} does not appear.
 
 \paragraph{Parity vectors.}
 For the shortcut map, the bijection between parity vectors of length $k$ and
@@ -520,9 +533,11 @@ the exact two-defect closed form (Theorem~\ref{thm:r1}); or the
 $\beta$-reduction of \S\ref{sec:beta}. In particular Lagarias's survey
 \cite{lagarias2010}, which covers the parity-vector framework and its
 literature, contains no treatment of \emph{least} elements of parity-vector
-classes. This is a negative search result, not a novelty claim, and the audit
-remains non-exhaustive: of the works cited here only
-Akhtar~\cite{akhtar2026} rests on its abstract alone.
+classes, and neither does \cite{akhtar2026}, the one work found to state
+Proposition~\ref{prop:class} independently. This is a negative search result,
+not a novelty claim, and the audit remains non-exhaustive; but every work cited
+here has now been read in full or, for three classical items, through
+Lagarias's survey.
 
 \section{Limitations}\label{sec:limits}
 
@@ -598,10 +613,9 @@ Two further items are recorded as limitations rather than results. First, the
 prior-art check of \S\ref{sec:lit} is not exhaustive: in particular
 Proposition~\ref{prop:class} is stated in~\cite{akhtar2026}, whose abstract was
 verified at source but whose full text was not consulted, so the boundary
-between that work and \S5--\S6 is established only at abstract level. Second, of
-the works cited, only~\cite{akhtar2026} rests on its abstract alone; three
-others are cited through Lagarias's survey rather than their originals, as
-marked.
+between that work and \S5--\S6 is established only at abstract level. Second, no citation here now rests on an abstract
+alone; three classical items are cited through Lagarias's survey rather than
+their originals, as marked.
 
 \section*{Provenance}
 
@@ -628,8 +642,8 @@ claimed to be $O(1)$; Proposition~\ref{prop:unbounded} shows it is unbounded.
 \bibitem{akhtar2026}
 M.~A.~K. Akhtar, \emph{Compression Spectra of Collatz Orbits: Sharp Residual
 Ordering, Exact Valuation Cylinders, and Residue-Threshold Sparsity},
-preprint, 19 August 2026, \texttt{doi:10.5281/zenodo.22015248}.
-\emph{Abstract verified at source; full text not consulted.}
+preprint, 19 August 2026, \texttt{doi:10.5281/zenodo.22015248};
+SSRN~7314419. \emph{Full text consulted.}
 
 \bibitem{bohmsontacchi}
 C.~B\"ohm and G.~Sontacchi, Atti Accad. Naz. Lincei Rend. Cl. Sci. Fis. Mat.

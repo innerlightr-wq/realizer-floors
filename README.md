@@ -83,16 +83,22 @@ erratum to the Terras–Everett residue class
 2026). The affine identity is Böhm–Sontacchi (1978), Prop. 4.
 
 §9 of the paper gives the full audit with a verification status on every
-citation. Full texts were consulted for Rozier–Terracol (arXiv:2502.00948v5),
-Kayadibi (Zenodo 20745800) and Lagarias's survey *The 3x+1 Problem: An
-Overview* (arXiv:2111.02635); Terras (1976), Everett (1977) and Lagarias (1985)
-are cited **through that survey** rather than their originals; Akhtar is the
-only citation resting on its abstract alone.
+citation. Full texts were consulted for Akhtar (SSRN 7314419), Rozier–Terracol
+(arXiv:2502.00948v5), Kayadibi (Zenodo 20745800) and Lagarias's survey *The
+3x+1 Problem: An Overview* (arXiv:2111.02635). Terras (1976), Everett (1977)
+and Lagarias (1985) are cited **through that survey** rather than their
+originals. **No citation rests on an abstract alone.**
+
+Akhtar's Theorem 9 states Proposition 1 independently, with an explicit class
+formula; it is equivalent to the form used here (verified on 1944 two-defect
+words, 0 disagreements). He does not bound least realizers, and uses the least
+representative only in normalized form as a placement diagnostic.
 
 The prior-art check is **not exhaustive**, and absence from it is not evidence
-of novelty. It is worth recording one negative result: Lagarias's survey, which
-covers the parity-vector framework and its literature, contains no treatment of
-*least* elements of parity-vector classes.
+of novelty. It is worth recording one negative result: neither Lagarias's survey, which
+covers the parity-vector framework and its literature, nor Akhtar, the one work
+found to state Proposition 1 independently, treats *least* elements of
+parity-vector classes.
 
 ## Licence
 
