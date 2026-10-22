@@ -1,0 +1,668 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}[proposition]{Theorem}
+\newtheorem{lemma}[proposition]{Lemma}
+\theoremstyle{definition}
+\newtheorem{hypo}{Hypothesis}
+\renewcommand{\thehypo}{$\beta$}
+
+\newcommand{\Fc}{F_{c}}
+\newcommand{\al}{\alpha}
+
+\title{Exact Realizer Floors for One- and Two-Defect\\
+Valuation Words in the Accelerated $3x+1$ Map}
+\author{Elias de Jesus}
+\date{22 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For the accelerated Syracuse map $T(x)=(3x+1)/2^{v_2(3x+1)}$ on odd integers we
+give the exact least realizer of a two-defect valuation word
+$w=1^{u}q_a1^{v}q_b1^{t}$ in closed form, and an unconditional
+per-configuration floor $\Fc(w)$ obtained by combining truncation with
+orbit-advance at one-defect granularity. We record the modulus convention
+precisely: the exact-valuation realizer set is one residue class modulo
+$2^{S+1}$, not $2^{S}$. We prove that the anchor denominator is $3^{n}$ on the
+interior stratum $u,v,t\ge 1$ and identify the boundary stratum $t=0$ where it
+drops, the extreme witness being the $x=1$ cycle word. We then sharpen the floor to $\Fc'$ using the fact that the second defect closes the
+first episode, and exhibit an infinite family on which that sharpening gains an
+unbounded number of bits. We then reduce the \emph{uniform} two-defect floor to
+a single named one-defect import $(\beta)$, with the threshold $\beta>1/2$
+exact at every scale, and record two negative results with computed witnesses.
+
+\medskip\noindent\textbf{Non-claims, stated up front.}
+Nothing here bears on the Collatz conjecture and nothing excludes divergent
+orbits; every statement concerns least realizers of finite valuation words.
+There is no formal verification: ``verified'' means exhaustive or exact finite
+computation on a stated grid. Theorem~\ref{thm:fc} is a per-configuration
+certificate and is \emph{not} a uniform family floor. The hypothesis $(\beta)$
+is open. A limited prior-art audit was carried out (\S\ref{sec:lit}) but is not
+exhaustive, so novelty is not established; branches (a) and (b) of
+Theorem~\ref{thm:fc} are standard cylinder facts and
+Proposition~\ref{prop:class} restates a correction published earlier by the
+author. What is claimed here is the closed-form per-configuration evaluation,
+the closed-episode branch~(c) with its unbounded gain
+(Proposition~\ref{prop:unbounded}), and the $\beta$-reduction.
+\end{abstract}
+
+\section{Epistemic tiers}
+
+\begin{center}
+\begin{tabular}{@{}llp{6.1cm}@{}}
+\toprule
+Tier & Meaning & Used for \\
+\midrule
+T1 & Exact integer arithmetic; proof & Props.~1--2, Thms.~3,~5,
+Lem.~4, all grid counts \\
+T2 & Exact integers, \texttt{math.log2} on exact inputs & $\delta$ values
+(\S\ref{sec:neg}); Pearson estimates (\S\ref{sec:limits}) \\
+T3 & Interpretation & framing remarks, \S\ref{sec:limits} items 4--6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\texttt{mpmath} was unavailable in the working environment, so the T2
+tier is served by exact integers rather than arbitrary-precision floats, which
+is stronger than required. No floating-point value decides any assertion.
+
+\section{The realizer class and the modulus convention}\label{sec:class}
+
+Throughout $\al=\log_2 3=1.5849625\dots$.
+A valuation word is $w=(v_1,\dots,v_n)$ with $v_k\ge 1$; set
+$S_k=v_1+\cdots+v_k$, $S=S_n$, $|w|=n$. The affine identity is
+$2^{S_k}x_k=3^kx+C_k$ with append recurrence $C'=3C+2^{S}$, equivalently
+$C_w=\sum_{k=1}^{n}3^{\,n-k}2^{S_{k-1}}$.
+
+\begin{proposition}\label{prop:class}
+An odd $m$ realizes $w$ with exact valuations if and only if
+$3^nm+C_w\equiv 2^{S}\pmod{2^{S+1}}$. The realizer set is exactly one residue
+class modulo $2^{S+1}$; write $m(w)$ for its least positive member.
+\end{proposition}
+
+\begin{proof}
+Two steps. (a) The top divisibility $2^{S_n}\mid 3^nm+C_n$ implies every
+earlier one: from $C_n=3C_{n-1}+2^{S_{n-1}}$,
+$3^nm+C_n=3(3^{n-1}m+C_{n-1})+2^{S_{n-1}}$, and $2^{S_{n-1}}$ divides the left
+side and the trailing term, hence $3(3^{n-1}m+C_{n-1})$ and so
+$3^{n-1}m+C_{n-1}$. The same computation gives $2^{v_n}\mid 3x_{n-1}+1$, so
+each $x_k$ with $k<n$ is automatically odd. (b) The one remaining condition is
+that $x_n$ be odd, worth exactly one further bit; it upgrades the integrality
+modulus $2^{S}$ to $2^{S+1}$.
+\end{proof}
+
+The \emph{integrality} class alone is modulo $2^{S}$; the exact-valuation class
+is modulo $2^{S+1}$. The distinction is the difference between a realizer and
+the least realizer, and it is the source of the reconciliation in
+\S\ref{sec:tworun}.
+
+\paragraph{Verification.}
+An independent implementation sharing no code with the first builds the class by
+backward recursion, $x\equiv 3^{-1}(2^{v_1}a'-1)\pmod{2^{v_1+M'}}$, from the
+base ``the empty word is realized by every odd $x$''. The modulus $2^{S+1}$
+emerges with no input, and a full scan of \emph{every} odd $m<2^{S+1}$ on $243$
+words confirms a singleton class with $M=S+1$ in every case: $0$ failures.
+
+\section{One defect, and a notation reconciliation}\label{sec:tworun}
+
+The conjugation $y=x+1$ linearises a run of ones: $v_k=1$ gives
+$x_k+1=3(x_{k-1}+1)/2$, so $x_k+1=(3/2)^k(x_0+1)$. A leading run of $u$ ones
+forces $2^{u}\mid m+1$, and a following letter $q\ge 2$ forces
+$2^{u+1}\,\|\,m+1$.
+
+\begin{proposition}\label{prop:tworun}
+Let $m+1=2^{u+1}A$ with $A$ odd, $n=q+v$, and let
+$y=(3^{u+1}A-1)/2^{\,q-1}$ be the odd orbit value reached after $1^{u}q$.
+Then the run of $v$ ones is governed by $v_2(y+1)$, and the two natural
+conditions are \emph{distinct}:
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+condition on the orbit & meaning & congruence\\
+\midrule
+$v_2(y+1)\ge v+1$ & realizes the finite word $1^{u}q1^{v}$
+  & $3^{u+1}A\equiv 1-2^{q-1}\pmod{2^{n}}$\\
+$v_2(y+1)=v+1$ & \dots\ and the next valuation is $\ge2$
+  & $3^{u+1}A\equiv 1-2^{q-1}+2^{n}\pmod{2^{n+1}}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Write $m(P)$ for the least realizer under the first condition and
+$m_{\mathrm{closed}}(P)$ for the least under the second.
+\end{proposition}
+
+\begin{proof}
+After $1^{u}$ the orbit is at $2\cdot3^{u}A-1$, so
+$3x+1=2(3^{u+1}A-1)$ and $v_2=q$ forces $v_2(3^{u+1}A-1)=q-1$, giving
+$x_{u+1}=y$. A run of $v$ ones needs $2^{v}\mid y+1$ (conjugate $y\mapsto y+1$,
+under which the run is $y\mapsto 3y/2$), and the final value
+$3^{v}(y+1)/2^{v}-1$ is odd exactly when $2^{v+1}\mid y+1$. For the next
+valuation, $3x_n+1=2\bigl(3^{v+1}(y+1)/2^{\,v+1}-1\bigr)$, which is divisible
+by $4$ precisely when $2^{v+1}\,\|\,y+1$.
+\end{proof}
+
+\paragraph{The source's finer modulus is not an error.}
+The imported note states the mod-$2^{n+1}$ form. That is the \emph{closed
+episode} condition, a different and equally legitimate specification---the end
+of a whole episode rather than an arbitrary finite prefix---not a typo for
+$2^{n}$. Both are used below: Proposition~\ref{prop:tworun}'s first row for the
+general theory, its second row in Theorem~\ref{thm:fc}\,(c).
+
+\paragraph{The two realizers can differ by many bits.}
+$m_{\mathrm{closed}}(P)\in\{m(P),\,m(P)+2^{S_P+1}\}$, so the two differ by at
+most one \emph{modulus}---but their \emph{heights} can differ by far more than
+one bit, since $m(P)$ may sit well below $2^{S_P+1}$. At $u=11$, $q=5$, $v=4$:
+$m(P)=4095$ while $m_{\mathrm{closed}}(P)=2\,101\,247=4095+2^{21}$, so
+$\log_2\bigl(m_{\mathrm{closed}}/m\bigr)=9.0032$. The measured supremum grows
+with the grid ($7.4237$ for $u,v\le10$; $9.0032$ for $u,v\le14$; $9.4294$ for
+$u,v\le18$), so this is not an $O(1)$ correction. One extra congruence bit is
+not one extra bit of height, and any estimate comparing the two must use the
+height, not the modulus count.
+
+\paragraph{Placement reduction.}
+Minimality of $A$ is governed by where $c\,3^{-(u+1)}$ falls in
+$\mathbb{Z}/2^{n}$; dually, by the ternary digits of $2^{-n}$ modulo
+$3^{u+1}$. This is the one-dimensional case of the obstruction in
+\S\ref{sec:limits}.
+
+\section{Two defects: closed form and denominator}\label{sec:r1}
+
+Let $w=1^{u}q_a1^{v}q_b1^{t}$, $n=u+v+t+2$, $S=u+v+t+q_a+q_b$.
+
+\begin{theorem}\label{thm:r1}
+$C_w=3^{n}-3^{\,v+t+1}2^{\,u+1}+3^{\,v+t+1}2^{\,u+q_a}
+-3^{\,t}2^{\,u+q_a+v+1}+3^{\,t}2^{\,u+q_a+v+q_b}-2^{S}.$
+\end{theorem}
+
+Equivalently, by Proposition~\ref{prop:class},
+\[
+m(w)\equiv -1-3^{-(u+1)}2^{u+1}\!\left(2^{q_a-1}-1\right)
+-3^{-(u+v+2)}2^{\,u+q_a+v+1}\!\left(2^{q_b-1}-1\right)\pmod{2^{S+1}},
+\]
+which exhibits $2^{u+1}\,\|\,m+1$, both cofactors being odd. At $q_a=q_b=1$ the
+formula collapses to $3^{n}-2^{n}$, the all-ones value. Verified: $0$
+mismatches out of $19\,773$ against the append recurrence.
+
+\begin{lemma}\label{lem:denom}
+The anchor is $3^{-n}(2^{S}-C_w)$, with reduced denominator
+$D=3^{\,\max(0,\;n-v_3(2^{S}-C_w))}$. On the interior stratum $u,v,t\ge1$,
+$v_3(2^{S}-C_w)=0$ and hence $D=3^{n}$.
+\end{lemma}
+
+\begin{proof}
+With $t\ge 1$ every monomial of $C_w$ except $-2^{S}$ carries a factor $3$, so
+$C_w\equiv -2^{S}\pmod 3$ and $2^{S}-C_w\equiv 2^{S+1}\not\equiv 0\pmod 3$.
+\end{proof}
+
+\paragraph{The denominator is representative-dependent.}
+Both one-sided lifts pin one representative each; the canonical Lemma-H datum
+is the \emph{balanced} lift $N^{*}\equiv-C\pmod{2^{S}}$ with
+$|N^{*}|\le 2^{S-1}$, giving $D=3^{\,n-v_3(N^{*})}$. On the family $u,v,t\in1..12$ with $q_a,q_b\in\{2,3,4\}$ ($15\,552$
+configurations), verified independently: both
+one-sided representatives are $3$-coprime everywhere ($0/15\,552$ each); the
+balanced lift reduces on $5263/15\,552=0.3384$, with $v_3(N^{*})$ following a
+geometric$(2/3)$ law to within sampling error:
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrrrrrrrr@{}}
+\toprule
+$k$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\
+\midrule
+observed & 10289 & 3478 & 1199 & 417 & 123 & 32 & 9 & 3 & 1 & 1\\
+geom$(2/3)$ & 10368 & 3456 & 1152 & 384 & 128 & 42.7 & 14.2 & 4.7 & 1.6 & 0.5\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The dangerous-window probe gives median $\log_2m/(S+1)$ of $0.9615$
+at $v_3(N^{*})=0$ versus $0.9620$ at $v_3(N^{*})>0$, a difference of $0.00046$. On these grids the reduction is therefore
+\textbf{consistent with the geometric benchmark and shows no predictive signal
+about $m$}. This is a finite measurement, not a proof that no relationship
+exists.
+
+The premise $\gcd(C_w,3^n)=1$ holds on all $19\,773$ configurations but does
+\emph{not} imply $D=3^n$, since $D$ is governed by $\gcd(2^{S}-C_w,3^{n})$.
+Stratifying over $|w|\le 44$, reductions $v_3>0$ occur on $1176$
+configurations with $t=0$ and on $0$ with $t\ge1$: the reduction is confined to
+$t=0$ exactly. The truncation at $0$ is necessary, not cosmetic: $v_3$ may exceed $n$. For
+$w=(6,2)$, $n=2$, $S=8$, $C_w=67$ and $2^{S}-C_w=189=3^{3}\cdot7$, so
+$v_3=3>n$; the anchor is $189/9=21$ with reduced denominator $1$, not
+$3^{-1}$. (On a grid with $u,v,t\le6$ and $q_a,q_b\in\{2,\dots,7\}$ this occurs on
+$4/12\,348$ configurations, all with $v=t=0$; it is invisible on a grid
+restricted to $q_a,q_b\in\{2,3,4\}$.) The extreme witness is the $x=1$ cycle word
+$w=(2,2)$, where
+$m(w)=1$, $2^{S}-C_w=9$, $v_3=2$ and $D=1$: reduced denominators mark cycle
+proximity, consistent with the cycle-denominator identification of Lagarias~\cite{lagarias1990}. Accordingly the family is stated as $u,v,t\ge1$ and the $t=0$ and
+$v=0$ strata are carved out explicitly.
+
+\section{The suffix-combination floor}
+
+Let $P=1^{u}q_a1^{v}$, $P'=1^{u}q_a$, $Q=1^{v}q_b1^{t}$.
+
+\begin{theorem}\label{thm:fc}
+(a) $m(w)\ge m(P)$;\quad
+(b) $m(w)\ge\left\lceil\left(2^{S_{P'}}m(Q)-C_{P'}\right)/3^{\,u+1}\right\rceil$;\quad
+(c) $m(w)\ge m_{\mathrm{closed}}(P)\ \ge m(P)$.
+Hence $\Fc'(w):=\max\{(b),(c)\}$ is an unconditional floor, computable in
+closed form for each configuration, and $\Fc'\ge\Fc:=\max\{(a),(b)\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{(a) Truncation:} any realizer of $w$ realizes the prefix $P$, so $m(w)$
+lies in the class of $P$. \emph{(b) Orbit-advance:} $x_{u+1}$ realizes $Q$, so
+$x_{u+1}\ge m(Q)$, and $m=(2^{S_{P'}}x_{u+1}-C_{P'})/3^{u+1}$ is increasing in
+$x_{u+1}$. \emph{(c)} In $w=1^{u}q_a1^{v}q_b1^{t}$ the prefix $P$ is followed
+by $q_b\ge2$, so every realizer of $w$ realizes $P$ \emph{as a closed
+episode}; apply the second row of Proposition~\ref{prop:tworun}.
+\end{proof}
+
+\paragraph{The closed branch is a strict improvement.}
+Branch (c) is available only because the second defect closes the first
+episode---it is not an alternative convention but extra information the
+two-defect structure supplies for free. Measured on $u,v,t\in1..11$
+($15\,552$ configurations): $\Fc'$ is \emph{never} worse than $\Fc$ and is
+strictly better on $5442$ ($35.0\%$), with mean gain $1.649$ bits, median
+$1.414$, maximum $4.790$. Truncation binds in $64.2\%$ of configurations. On that grid the
+improvement is small---the balanced median rises from $0.6826$ to $0.6903$ per
+unit $|w|$ against an empirical $1.0341$---but \textbf{it is not $O(1)$ in
+general}, and an earlier draft's claim that it was has been withdrawn.
+
+\begin{proposition}\label{prop:unbounded}
+The gain $\log_2(\Fc'/\Fc)$ is unbounded on the two-defect family. For each
+$v\ge1$ choose an even $e$ with $3^{e}\equiv-15\pmod{2^{\,v+6}}$ and $e$ large
+enough that branch (b) is dominated. For $w=1^{\,e-1}5\,1^{v}2\,1$,
+\[
+\Fc(w)=2^{e}-1,\qquad \Fc'(w)=2^{e}-1+2^{\,e+v+5},\qquad
+\log_2\frac{\Fc'(w)}{\Fc(w)}>v+5 .
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Existence of arbitrarily large even $e$.} For $k\ge3$ the group
+$(\mathbb{Z}/2^{k})^{*}$ is $\{\pm1\}\times\langle3\rangle$ with
+$\operatorname{ord}(3)=2^{\,k-2}$, so $\langle9\rangle=\langle3^{2}\rangle$ has
+order $2^{\,k-3}$ and is contained in $\{x\equiv1\bmod 8\}$, a set of the same
+cardinality; hence $\langle9\rangle=\{x\equiv1\bmod 8\}$ exactly. Since
+$-15\equiv1\pmod 8$, the congruence $3^{e}\equiv-15\pmod{2^{\,v+6}}$ is
+solvable, and because $3^{e}\equiv1\pmod 8$ iff $e$ is even, every solution is
+even. The solutions form the progression $e\equiv e_0 \pmod{2^{\,v+4}}$, so
+arbitrarily large even solutions exist.
+
+\emph{The two floors.} Put $u=e-1$, $q_a=5$, so $P=1^{\,e-1}5\,1^{v}$,
+$n=q_a+v=v+5$ and $S_P=e+v+4$. Taking $A=1$ in
+Proposition~\ref{prop:tworun} gives $m=2^{e}-1$, and the first row requires
+$3^{e}\equiv1-2^{4}=-15\pmod{2^{\,v+5}}$, which our congruence implies; as
+$A=1$ is the least positive odd value, $m(P)=2^{e}-1$. The second row requires
+$3^{e}\equiv-15+2^{\,v+5}\pmod{2^{\,v+6}}$, which our congruence
+\emph{contradicts}; so $A=1$ is not closed, and
+$m_{\mathrm{closed}}(P)=m(P)+2^{S_P+1}=2^{e}-1+2^{\,e+v+5}$. This is exactly
+why the hypothesis is imposed modulo $2^{\,v+6}$ and not $2^{\,v+5}$: the finer
+modulus simultaneously selects $A=1$ for the open word and rejects it for the
+closed one.
+
+\emph{Branch (b) is dominated.} With $t=1$, $Q=1^{v}2\,1$ and $m(Q)$ depend only
+on $v$, while $S_{P'}=u+q_a=e+4$. Hence branch (b) is at most
+$2^{\,e+4}m(Q)/3^{\,e}$, and its ratio to $2^{e}-1$ is
+$O\bigl(16\,m(Q)\,3^{-e}\bigr)\to0$. So for all large $e$ in the progression the
+truncation branch binds in both $\Fc$ and $\Fc'$, giving
+$\log_2(\Fc'/\Fc)=\log_2\bigl(1+2^{\,v+5}\cdot\tfrac{2^{e}}{2^{e}-1}\bigr)>v+5$.
+\end{proof}
+
+Each step was checked numerically: $\langle9\rangle=\{x\equiv1\bmod8\}$ for
+$2^{4}\dots2^{12}$; the solution progressions and their parity for
+$v=1,\dots,5$; the open/closed selection of $A=1$; and the domination of
+branch~(b) along the progression. Verified for $v=1,\dots,7$: both closed forms match the computed floors
+exactly, and the gain is $6.0227, 7.0116, 8.0060, 9.0032, 10.0014, 11.0007,
+12.0004$, decreasing to $v+5$ from above. The smallest instance is already
+instructive: $w=1^{11}5\,1^{4}2\,1$ has $\Fc=4095$, $\Fc'=2\,101\,247$ and
+$m(w)=14\,684\,159$, a gain of $9.0032$ bits with both floors valid. Branch (c)
+therefore sharpens the per-configuration certificate by an unbounded amount on
+suitable words, while leaving \S\ref{sec:beta} and every asymptotic claim
+untouched (those concern the balanced regime, where the gain is small).
+
+\paragraph{Framing (T3).}
+$\Fc$ is \textbf{not a new mechanism}: it is orbit-advance plus truncation,
+evaluated at one-defect granularity---truncating to the full one-defect prefix
+$P$ and using its exact $m(P)$ rather than to a maximal all-ones run. The
+novelty claimed is only closed-form per-configuration evaluability and the
+$\beta$-reduction of \S\ref{sec:beta}.
+
+\paragraph{Independence certificate.}
+$\Fc\le m(w)$ with $0$ violations out of $19\,773$, and $\Fc'\le m(w)$ with $0$ out of $15\,552$. Against the
+all-ones-run floor: better on $19\,252$, tied on $521$, worse on $0$;
+dominant, strictly better on $97.4\%$. The second, independent implementation
+of the same specification reports $450/451$ with one exact tie at a degenerate
+$|w|=32$, $v=1$ configuration---the same qualitative result on a different
+grid. That package was run in this environment and reproduced its balanced
+medians $0.337/0.671/1.015$ exactly, against $0.683/0.336/1.034$ here; the
+differences are grid composition.
+
+\section{The uniform reduction}\label{sec:beta}
+
+Theorem~\ref{thm:fc} is per-configuration. A uniform family floor needs a
+uniform one-defect input.
+
+\begin{hypo}\label{hyp:beta}
+$\log_2 m(1^{U}q1^{V})\ \ge\ \beta\cdot S(1^{U}q1^{V})$ for all
+$U\ge1$, $V\ge1$, $q\ge2$.
+\end{hypo}
+
+\paragraph{The domain restriction is necessary.}
+With $V=0$ allowed the hypothesis is false for any $\beta>1/2$: the word
+$(1,4)$, i.e.\ $U=1$, $q=4$, $V=0$, has $m=3$ and $S=5$, giving
+$\log_2m/S=0.3170$. Allowing $U=V=0$ is worse still---$w=(2)$ has $m=1$ and
+ratio $0$. On the interior $U,V\ge1$, with $q\in\{2,\dots,7\}$, the measured minimum
+is $0.5714$, attained
+at $(U,q,V)=(11,5,5)$, and it is \emph{stable}: the same minimiser and value
+on grids $U,V\le20$, $\le30$ and $\le45$ ($0.5977$ for $U,V\le10$). So the
+interior family is consistent with $\beta>1/2$, with a margin of about $0.07$
+and no observed drift toward $1/2$---evidence for the hypothesis, not a proof
+of it. The two-defect application only ever invokes
+Hypothesis~\ref{hyp:beta} on the interior, since $P=1^{u}q_a1^{v}$ with
+$u,v\ge1$.
+
+Normalisation, stated explicitly: balanced $u=v=t=k$, $q_a=q_b=2$, so
+$S_P=2k+2$, and the comparator is the all-ones-run floor of $k+1$ bits.
+\begin{itemize}[nosep]
+\item \emph{Truncation branch:} $\beta(2k+2)>k+1\iff\beta>(k+1)/(2k+2)=1/2$,
+exactly $1/2$ for \emph{every} $k$, not merely asymptotically.
+\item \emph{Advance branch:} $\beta>(\al(k+1)-1)/(2k+2)\to\al/2=0.792481$,
+rising $0.542\to0.792$ across $k=1,\dots,5000$.
+\end{itemize}
+Empirically $\beta$ for $1^{k}21^{k}$ is $0.9167$ $(k=5)$, $0.9286$ $(20)$,
+$0.9672$ $(60)$, $1.0033$ $(150)$. \textbf{Hypothesis~\ref{hyp:beta} with
+$\beta>1/2$ is the single question to which this note reduces the uniform
+two-defect problem. It is open, and it is an effective question.}
+
+\section{Negative results}\label{sec:neg}
+
+\paragraph{Merge bridge: failed.}
+Canonical image $m_2(u,q_a+q_b,v+t)$. At $(u,q_a,v,q_b,t)=(22,4,2,2,6)$,
+$|w|=32$:
+
+\begin{center}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+image & bits & $\delta$ (bit length) & $\delta$ (true $\log_2$, T2)\\
+\midrule
+canonical $m_2(u,q_a+q_b,v+t)$ & 37 & $+0.3125$ & $\mathbf{+0.3209}$\\
+$m_2(u,q_a,v+t)$ & 34 & $+0.2188$ & $+0.2248$\\
+$m_2(u,q_a+q_b-1,v+t)$ & 35 & $+0.2500$ & $+0.2508$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The canonical variant reproduces the second implementation's
+$\delta=0.321$ to four decimals, provided $\delta$ is measured by true $\log_2$
+rather than bit length; that cross-engine agreement is the engines-agree
+certificate. Suprema of $\delta$ per unit $|w|$: $+0.8662$ at $(2,2,1,4,1)$,
+$|w|=6$ on the small full grid and on its interior; $+0.2093$ at
+$(21,2,21,3,0)$, $|w|=44$ for $|w|\ge32$. The small-grid suprema are attained
+at the smallest admissible words and are boundary artefacts, so the
+$|w|\ge 32$ figure is the one bearing on asymptotics.
+
+\paragraph{Deletion bridge: dominated} by Theorem~\ref{thm:fc}---it requires
+$\beta\gtrsim0.56$, strictly worse than $1/2$, and additionally needs a
+uniform-cost hypothesis that $\Fc$ does not.
+
+\paragraph{Why no bridge beats $\Fc$ (T3).}
+A bridge posits $m(v)\le A\,m(w)^{q}2^{\delta|w|}$, which rearranges to
+$m(w)\ge\bigl(m(v)/(A2^{\delta|w|})\bigr)^{1/q}$---\emph{the bridge's own
+conclusion}. So that condition is never weaker than the floor it produces, and
+a bridge is non-circular only when it is established by a mechanism indifferent
+to the size of $m(w)$. Exactly one such mechanism exists: a realizer realizes
+every contiguous factor of $w$, directly or after orbit advance. Those are the
+two branches of $\Fc$. Merge and deletion images are not factors of $w$.
+
+\section{Calibration}
+
+Medians of bits per $|w|$, balanced regime, $|w|\ge62$, $369$ configurations:
+all-ones-run floor $0.336$; $\Fc$ $0.683$; $\Fc'$ $\mathbf{0.690}$;
+empirical $1.034$.
+Per regime at $|w|\approx122$ (bits):
+
+\begin{center}
+\begin{tabular}{@{}lrrrrrl@{}}
+\toprule
+regime & trunc & adv & $\Fc$ & run floor & empirical & binds\\
+\midrule
+balanced & 82 & 59 & \textbf{82} & 41 & 124 & truncation\\
+leading-heavy & 122 & 1 & \textbf{122} & 119 & 122 & truncation\\
+middle-heavy & 119 & 122 & \textbf{122} & 119 & 125 & advance\\
+trailing-heavy & 5 & 119 & \textbf{119} & 119 & 124 & advance\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent $\Fc$ is near-sharp in the lopsided regimes ($0.93$--$1.00$ of the
+empirical exponent) and loses about a third of it when balanced. Under
+Hypothesis~\ref{hyp:beta} with $\beta\approx0.95$ the conditional balanced rate
+is $\approx0.633$ per unit word length, so $(\beta)$ does \emph{not} by itself
+close the balanced gap; it closes the gap to the run-floor comparator.
+
+
+\section{Relation to prior work}\label{sec:lit}
+
+A literature check was performed for this revision. It is not exhaustive, and
+absence from it is not evidence of novelty.
+
+\paragraph{The affine identity is classical.}
+$2^{S_k}x_k=3^{k}x+C_k$ with $C_w=\sum_k 3^{\,n-k}2^{S_{k-1}}$ is
+Proposition~4 of B\"ohm and Sontacchi~\cite{bohmsontacchi} (1978), in the
+two-branch form $u^{n}(x)=\bigl(3^{m}x+\sum_{k<m}3^{\,m-k-1}2^{v_k}\bigr)/2^{n}$;
+their Proposition~5 is the cycle closed form. \emph{Verified first-hand.}
+
+\paragraph{Proposition~\ref{prop:class} is the author's own prior correction.}
+That the exact realizers of a valuation word form a single residue class modulo
+$2^{S+1}$ rather than the Terras--Everett modulus $2^{S}$ was established in
+\cite{dejesus-erratum} (11 August 2026), explicitly as an erratum to the
+Terras--Everett residue class, and is carried as Proposition~5.2 of
+\cite{dejesus-eoc}. Proposition~\ref{prop:class} restates it here, with a proof,
+only because the $2^{S}$ versus $2^{S+1}$ distinction drives
+\S\ref{sec:tworun}; no new priority is claimed for it in this note.
+The same statement appears independently in Akhtar~\cite{akhtar2026}
+(19 August 2026): ``Every finite valuation word is tied to one odd residue class
+modulo $2^{K+1}$, yielding exact arithmetic realizability.'' \emph{Both dates
+verified at source.} That abstract does not address least elements, closed-form
+least realizers, or lower bounds on them, which is where \S5--\S6 sit; its full
+text was not consulted.
+
+\paragraph{Parity vectors.}
+For the shortcut map, the bijection between parity vectors of length $k$ and
+residue classes modulo $2^{k}$ is due to Terras~\cite{terras1976} (1976), with
+the terminology and much of the later framework from
+Lagarias~\cite{lagarias1985}. Parity vectors for the accelerated map are
+treated by Rozier and Terracol~\cite{rozierterracol}. \emph{Abstract-level
+only.}
+
+\paragraph{The leading-run spine.}
+That a leading run of $u$ ones forces $2^{u+1}\mid m+1$, giving
+$m(1^{u})=2^{u+1}-1$, is the ``modular resistance spine'' of
+Kayadibi~\cite{kayadibi2026}, who shows $n=2^{m}q-1$ implies
+$T^{j}(n)=3^{j}2^{\,m-j}q-1$ for $0\le j\le m-1$ and hence a deterministic
+lower bound on first-descent time. \emph{Verified at source (abstract).}
+
+\paragraph{Extremal $C_w$ bounds.}
+Sharp bounds on $C_w$---relevant to the anchor sizes here, though not to
+anything we prove---are B\"ohm--Sontacchi Proposition~6, rediscovered as
+Lemma~4 of Halbeisen and Hungerb\"uhler~\cite{hh1997}. \emph{Verified
+first-hand.}
+
+\paragraph{What the check did not find.}
+No prior treatment was found of: the closed-episode/finite-word distinction of
+Proposition~\ref{prop:tworun} and its consequence Theorem~\ref{thm:fc}\,(c);
+the exact two-defect closed form (Theorem~\ref{thm:r1}); or the
+$\beta$-reduction of \S\ref{sec:beta}. This is a negative search result, not a
+novelty claim.
+
+\section{Limitations}\label{sec:limits}
+
+\begin{enumerate}[nosep,leftmargin=*]
+\item Nothing here bears on the Collatz conjecture; nothing excludes divergent
+orbits.
+\item No formal verification of any kind.
+\item Per-configuration $\ne$ uniform; the uniform statement needs
+Hypothesis~\ref{hyp:beta}.
+\item The residual above $\Fc$ is an incomplete-window statement: it requires
+that $-C_w3^{-n}\bmod 2^{S+1}$ not be anomalously small. For two defects this
+is a \emph{two-dimensional} pointwise window problem for
+$\langle3\rangle\le(\mathbb{Z}/2^{M})^{*}$---simultaneous dyadic windows for
+$3^{-a}$ and $3^{-a-b}$---whose one-dimensional case is \S\ref{sec:tworun}.
+Character and complete-sum methods are provably unavailable there, $2$ being a
+primitive root modulo $3^{b}$, and the two-dimensional case is strictly
+stronger.
+\item Effective methods degrade categorically with a second defect: the form
+has three logarithms with heights $(3,A,Z)$,
+$Z=3^{v+1}(2^{q_a-1}-1)+2^{q_a+v}(2^{q_b-1}-1)$, where $\log_2Z=\Theta(v)$
+exactly and $Z$ is never $\{2,3\}$-smooth ($19\,773/19\,773$). The recoverable
+exponent fraction therefore acquires a factor $1/v$ and tends to $0$ for every
+fixed constant, except for bounded middle runs. The three-logarithm constant is
+\textbf{not verified at source}, so no crossover is asserted.
+\item The residual behaves as an independent residual. The published
+statistic---$(\log_2m-\Fc)/|w|$ against P-anchor fullness
+$\log_2m(P)/(u+q_a+v+1)$ at fixed $|w|=122$---reproduces exactly here,
+$r=-0.179$, $n=100$. That design is underpowered: over $40$ replicates $r$
+ranges over $[-0.372,+0.042]$, sd $0.111$, with $|r|>0.197$ firing in $21/40$,
+so neither magnitude nor sign is stable. At $n=20\,000$ the same statistic
+gives $r=-0.1673$, nonzero against the $0.0139$ threshold and close to the
+published estimate. The correlation is real but explains $r^{2}=2.8\%$ of
+residual variance, so the conclusion holds on grounds of \emph{small effect
+size}, not statistical insignificance.
+\item A literature check was performed (\S\ref{sec:lit}) but is not
+exhaustive; absence from it is not evidence of novelty.
+Proposition~\ref{prop:class} is the author's own prior result
+(\cite{dejesus-erratum}) and is not claimed as new here.
+\end{enumerate}
+
+\section{Reproduction}
+
+All code and data are public at
+\url{https://github.com/innerlightr-wq/realizer-floors}.
+Python 3.14.7, standard library only; no \texttt{numpy}, \texttt{sympy} or
+\texttt{mpmath}.
+
+\begin{verbatim}
+python3 src/verify_note_numbers.py > data/note_numbers.txt
+python3 src_indep/indep_realizer.py          # independent class, R1, denom
+python3 src_indep/test_R2_strata.py          # denominator by stratum
+python3 src_indep/test_R2_balanced_lift.py   # balanced lift + geom(2/3)
+python3 src_indep/test_R3.py                 # F_c validity and dominance
+python3 src_indep/test_R4_R5.py              # beta thresholds, merge witnesses
+python3 src_indep/test_R5_canonical.py       # canonical merge image
+python3 src_indep/test_R6_their_stat.py      # R6 power, published stat
+python3 src/two_run_crosscheck.py            # two-run import cross-check
+\end{verbatim}
+
+Every number printed above is regenerated by \texttt{verify\_note\_numbers.py}.
+Superseded scripts are retained but not listed: \texttt{test\_R6\_power.py}
+(a correlation on a different statistic, withdrawn) and
+\texttt{bridge\_search\_CIRCULAR\_retracted.py}.
+
+\section*{Open questions}
+
+The uniform two-defect floor reduces to a single arithmetic input:
+\textbf{Hypothesis~$\beta$ with $\beta>1/2$ on the interior family
+$U,V\ge1$} (\S\ref{sec:beta}). It is open, and it is an effective question.
+Everything else proved here is a per-configuration certificate.
+
+Two further items are recorded as limitations rather than results. First, the
+prior-art check of \S\ref{sec:lit} is not exhaustive: in particular
+Proposition~\ref{prop:class} is stated in~\cite{akhtar2026}, whose abstract was
+verified at source but whose full text was not consulted, so the boundary
+between that work and \S5--\S6 is established only at abstract level. Second,
+three of the references are cited at abstract level only, as marked.
+
+\section*{Provenance}
+
+The results were produced twice, by two independently written implementations
+of the same specification: one via the affine identity of
+\S\ref{sec:class}--\S\ref{sec:r1}, one via a backward recursion on the word
+that derives the modulus $2^{S+1}$ with no input from the author. They agree on
+every shared quantity, including the closed form (0 mismatches out of
+$19\,773$) and all floor values. A third, separately produced package was
+obtained and executed, reproducing its reported correlation $r=-0.179$, merge
+supremum $+0.3209$, balanced medians $0.337/0.671/1.015$ and $\beta^{*}=1/2$.
+
+Three claims made during development were withdrawn and are recorded here
+because the corrected forms are used above. (i) A bridge-style search reported
+positive margins by estimating its transfer constant from the measured
+$m(w)$; that is circular, since the transfer condition rearranges to the
+conclusion it was meant to establish (\S\ref{sec:neg}). (ii) The two
+representatives of \S\ref{sec:tworun} were claimed to differ in height by at
+most one bit; they differ by one \emph{modulus}, but by up to $9.43$ bits of
+height on the grids tested. (iii) The gain from Theorem~\ref{thm:fc}\,(c) was
+claimed to be $O(1)$; Proposition~\ref{prop:unbounded} shows it is unbounded.
+
+\begin{thebibliography}{9}
+\bibitem{akhtar2026}
+M.~A.~K. Akhtar, \emph{Compression Spectra of Collatz Orbits: Sharp Residual
+Ordering, Exact Valuation Cylinders, and Residue-Threshold Sparsity},
+preprint, 19 August 2026, \texttt{doi:10.5281/zenodo.22015248}.
+\emph{Abstract verified at source; full text not consulted.}
+
+\bibitem{bohmsontacchi}
+C.~B\"ohm and G.~Sontacchi, Atti Accad. Naz. Lincei Rend. Cl. Sci. Fis. Mat.
+Natur. \textbf{64} (1978), 260--264. \emph{Verified first-hand.}
+
+\bibitem{dejesus-eoc}
+E. De~Jes\'us, \emph{A Global Occupation Conjecture for the Accelerated $3x+1$
+Map: Residue--Time Duality, Divergent-Orbit Sparsity, and the Pointwise
+Realizer Problem}, Revision~8, 4 October 2026,
+\texttt{doi:10.5281/zenodo.23146031}. \emph{Verified at source.}
+
+\bibitem{dejesus-erratum}
+E. De~Jes\'us, \emph{The Least-Realizer Minimum for Confined Words: An Erratum
+to the Terras--Everett Residue Class\dots}, 11 August 2026,
+\texttt{doi:10.5281/zenodo.21889704}. \emph{Verified at source.}
+
+\bibitem{hh1997}
+L.~Halbeisen and N.~Hungerb\"uhler, \emph{Optimal bounds for the length of
+rational Collatz cycles}, Acta Arith. \textbf{78} (1997), no.~3, 227--239.
+\emph{Verified first-hand.}
+
+\bibitem{kayadibi2026}
+S.~Y. Kayadibi, \emph{A Modular Classification of Pre-Descent Resistance in
+Accelerated Odd Collatz Dynamics}, 18 June 2026,
+\texttt{doi:10.5281/zenodo.20745800}. \emph{Abstract verified at source.}
+
+\bibitem{lagarias1985}
+J.~C. Lagarias, \emph{The $3x+1$ problem and its generalizations}, Amer. Math.
+Monthly \textbf{92} (1985), 3--23. \emph{Not re-verified at source.}
+
+\bibitem{lagarias1990}
+J.~C. Lagarias, \emph{The set of rational cycles for the $3x+1$ problem},
+Acta Arith. \textbf{56} (1990), 33--53. \emph{Not re-verified at source.}
+
+\bibitem{rozierterracol}
+O.~Rozier and C.~Terracol, \emph{Paradoxical behavior in Collatz sequences},
+arXiv:2502.00948; Discrete Math. \textbf{349} (2026).
+\emph{Abstract-level only.}
+
+\bibitem{terras1976}
+R.~Terras, \emph{A stopping time problem on the positive integers}, Acta Arith.
+\textbf{30} (1976), 241--252. \emph{Abstract-level only.}
+\end{thebibliography}
+
+\section*{Acknowledgement of AI assistance}
+
+AI assistance (Claude) was used for verification and drafting. Conceptual
+direction and final responsibility are the author's.
+
+\section*{Licensing}
+
+This paper is released under CC BY 4.0. The accompanying code is released under
+the MIT License.
+
+\end{document}
